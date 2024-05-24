@@ -44,8 +44,6 @@ def MostrarPilotos():
 
 
 
-#Saldo inicial para apostas
-
 print('BOAS VINDAS AO PIT-STOP!')
 
 print('+-----------------------------------------------------+')
@@ -64,6 +62,14 @@ print('| 2. | Apostar nos pilotos que estarão no podio;      |')
 print('| 3. | Apostar no tempo de pit-stop mais rapido;      |')
 print('| 4. | Apostar no piloto de volta mais rapida;        |')
 print('+-----------------------------------------------------+')
+
+def AnimacaoCarregarPilotos():
+    palavra = 'Carregando pilotos'
+    pontos = ''
+    for i in range(3):
+        pontos += '.'
+        print(f'{palavra}{pontos}')
+        time.sleep(1)
 
 def AnimacaoSimular():
     palavra = 'Simulando'
@@ -97,7 +103,7 @@ def FichaAposta(categoria, valor):
     print('+-------------------------------------+')
     print('|          FICHA DE CONFIRMACAO       |')
     print('|                                     |')
-    print(f'|Categoria: {categoria}                        |')
+    print(f'|Categoria: {categoria}                         |')
     print(f'|Valor da aposta: {valor}                  |')
     print('+-------------------------------------+')
 
@@ -125,9 +131,7 @@ def ApostarPosicaoFinal(posicao, moedas):
 
     return saldo
 
-def ApostarPodio(piloto1, piloto2, piloto3, moedas):
-    global saldo
-    
+def ApostarPodio(piloto1, piloto2, piloto3, moedas):    
     podio = random.sample(nomePilotos, 3)
     
     acertos = 0
@@ -145,23 +149,38 @@ def ApostarPodio(piloto1, piloto2, piloto3, moedas):
     elif acertos == 1:
         saldo += 30
     else:
-        saldo -= moedas
+        print('Voce perdeu :( ')
+        moedas -= int(moedas * 0.60)
 
     return podio, acertos, moedas
     
 
-
-def ApostarPitStop(tempo, moedas):
-    return None
+def ApostarPitStop(piloto, moedas):
+    vencedor = random.sample(nomePilotos, 1)
+    if piloto in vencedor:
+        print('Parabens você venceu! :)')
+        moedas += 300
+    else:
+        print('Voce perdeu :(')
+        moedas -= moedas * 0.7
+    return vencedor, moedas
 
 def ApostarVoltaRapida(piloto, moedas):
-    return None
+    vencedor = random.sample(nomePilotos, 1)
+    if piloto in vencedor:
+        print('Parabens você venceu! :)')
+        moedas += 300
+    else:
+        print('Voce perdeu :(')
+        moedas -= moedas * 0.7
+    return vencedor, moedas
 
 categoria = int(input("Selecione o numero da respectiva categoria de aposta: "))
 
 if categoria == 1:
     while True:
         print('Categoria selecionada: Apostar nas posicoes finais dos pilotos\n')
+        AnimacaoCarregarPilotos()
         MostrarPilotos()
         piloto = int(input("Selecione o indice do piloto que deseja apostar: "))
         print(f'Piloto selecionado: {nomePilotos[piloto]} {sobrenomePilotos[piloto]}')
@@ -190,6 +209,7 @@ if categoria == 1:
 elif categoria == 2:
     while True:
         print('Categoria selecionada: Apostar nos pilotos que estarão no podio\n')
+        AnimacaoCarregarPilotos()
         MostrarPilotos()
         podio = []
         for i in range(1, 4):  
@@ -220,4 +240,63 @@ elif categoria == 2:
                 break
         else:
             print('Programa encerrado...')
-            break                
+            break
+
+elif categoria == 3:
+    while True:
+        print('Categoria selecionada: Apostar no tempo de pit-stop mais rapido\n')
+        AnimacaoCarregarPilotos()
+        MostrarPilotos()
+        piloto = int(input("Selecione o indice do piloto que deseja apostar: "))
+        print(f'Piloto selecionado: {nomePilotos[piloto]} {sobrenomePilotos[piloto]}')
+        moedas = int(input(f"Quantas moedas deseja apostar no podio?"))
+        if VerificarSaldo(moedas):
+            FichaAposta(2, moedas)
+            time.sleep(0.5)
+            confirmacao = input('Prosseguir para a simulacao?: (S/n)')
+            if ConfirmacaoPositiva(confirmacao):
+                AnimacaoSimular()
+                vencedor, saldo = ApostarPitStop(piloto, saldo - moedas)
+                time.sleep(2)
+                print(f'Piloto com Pit-Stop mais rapido: {vencedor}')
+                print(f'Saldo de moedas apos aposta: {saldo:.2f}')
+                prosseguir = input('Deseja apostar de novo?: (S/n)')
+                if ConfirmacaoNegativa(prosseguir):
+                    print('OBRIGADO POR JOGAR!\n ATÉ A PROXIMA     :)')
+                    break
+            else:
+                time.sleep(2)
+                print('Aposta encerrada...')
+                break
+        else:
+            print('Programa encerrado...')
+            break
+elif categoria == 4:
+    while True:
+        print('Categoria selecionada: Apostar no piloto de volta mais rapida\n')
+        AnimacaoCarregarPilotos()
+        MostrarPilotos()
+        piloto = int(input("Selecione o indice do piloto que deseja apostar: "))
+        print(f'Piloto selecionado: {nomePilotos[piloto]} {sobrenomePilotos[piloto]}')
+        moedas = int(input(f"Quantas moedas deseja apostar no podio?"))
+        if VerificarSaldo(moedas):
+            FichaAposta(2, moedas)
+            time.sleep(0.5)
+            confirmacao = input('Prosseguir para a simulacao?: (S/n)')
+            if ConfirmacaoPositiva(confirmacao):
+                AnimacaoSimular()
+                vencedor, saldo = ApostarPitStop(piloto, saldo - moedas)
+                time.sleep(2)
+                print(f'Piloto com Pit-Stop mais rapido: {vencedor}')
+                print(f'Saldo de moedas apos aposta: {saldo:.2f}')
+                prosseguir = input('Deseja apostar de novo?: (S/n)')
+                if ConfirmacaoNegativa(prosseguir):
+                    print('OBRIGADO POR JOGAR!\n ATÉ A PROXIMA     :)')
+                    break
+            else:
+                time.sleep(2)
+                print('Aposta encerrada...')
+                break
+        else:
+            print('Programa encerrado...')
+            break

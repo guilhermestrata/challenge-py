@@ -2,6 +2,7 @@ import random
 import time
 
 
+
 nomePilotos = ['Jake', 'Stoffel', 'Sergio',
                'Robin', 'Joel', 'Jake',
                'Maximilan', 'Sam', 'Taylor', 
@@ -39,32 +40,38 @@ equipesPilotos = ['Andretti', 'Penske', 'ERT',
 def MostrarPilotos():
     for i in range(len(nomePilotos) - 1):
         print( '+-------------------------------------+')
-        print(f'|                 {i}                  ')
+        print(f'|                 {i}                 |')
         print(f'|NOME: {nomePilotos[i]} {sobrenomePilotos[i]}\n|EQUIPE: {equipesPilotos[i]}')
 
-
+def MostrarEquipes():
+    for i in range(len(equipesPilotos) - 1):
+        print( '+-------------------------------------+')
+        print(f'|                 {i}                 |')
+        print(f'|EQUIPE: {equipesPilotos[i]}'           )
 
 print('BOAS VINDAS AO PIT-STOP!')
 
 print('+-----------------------------------------------------+')
-print('| Instrucoes:                                         |')
+print('|                     INSTRUCOES:                     |')
 print('+-----------------------------------------------------+')
 print('| 1. Escolha um piloto para apostar;                  |')
 print('| 2. Aposte suas moedas nas categorias disponiveis;   |')
 print('| 3. Inicie a simulacao e aguarde o resuldado;        |')
 print('+-----------------------------------------------------+')
-
+print('|#####################################################|')
 print('+-----------------------------------------------------+')
-print('| CATEGORIAS DE APOSTAS:                              |')
-print('+-----------------------------------------------------+')
+print('|               CATEGORIAS DE APOSTAS:                |')
+print('+----+------------------------------------------------+')
 print('| 1. | Apostar nas posicoes finais dos pilotos;       |')
 print('| 2. | Apostar nos pilotos que estarão no podio;      |')
 print('| 3. | Apostar no tempo de pit-stop mais rapido;      |')
 print('| 4. | Apostar no piloto de volta mais rapida;        |')
-print('+-----------------------------------------------------+')
+print('| 5. | Apostar na equipe do piloto vencedor           |')
+print('+----+------------------------------------------------+')
 
-def AnimacaoCarregarPilotos():
-    palavra = 'Carregando pilotos'
+
+def AnimacaoCarregar():
+    palavra = 'Carregando'
     pontos = ''
     for i in range(3):
         pontos += '.'
@@ -131,15 +138,16 @@ def ApostarPosicaoFinal(posicao, moedas):
 
     return saldo
 
-def ApostarPodio(piloto1, piloto2, piloto3, moedas):    
+
+def ApostarPodio(piloto1, piloto2, piloto3, moedas):
     podio = random.sample(nomePilotos, 3)
-    
+
     acertos = 0
-    if piloto1 in podio:
+    if piloto1 in podio and piloto1 != podio[0]:
         acertos += 1
-    if piloto2 in podio:
+    if piloto2 in podio and piloto2 != podio[1]:
         acertos += 1
-    if piloto3 in podio:
+    if piloto3 in podio and piloto3 != podio[2]:
         acertos += 1
 
     if acertos == 3:
@@ -149,11 +157,19 @@ def ApostarPodio(piloto1, piloto2, piloto3, moedas):
     elif acertos == 1:
         saldo += 30
     else:
-        print('Voce perdeu :( ')
+        print('Você perdeu :( ')
         moedas -= int(moedas * 0.60)
 
     return podio, acertos, moedas
-    
+def ApostarEquipe(equipe, moedas):
+    equipeVencedora = random.sample(equipesPilotos, 1)
+    if equipe in equipeVencedora:
+        print('Parabens voce venceu"  :)')
+        moedas += 300
+    else:
+        print('Voce perdeu :(')
+        moedas -= moedas * 0.7
+    return vencedor, moedas
 
 def ApostarPitStop(piloto, moedas):
     vencedor = random.sample(nomePilotos, 1)
@@ -180,7 +196,7 @@ categoria = int(input("Selecione o numero da respectiva categoria de aposta: "))
 if categoria == 1:
     while True:
         print('Categoria selecionada: Apostar nas posicoes finais dos pilotos\n')
-        AnimacaoCarregarPilotos()
+        AnimacaoCarregar()
         MostrarPilotos()
         piloto = int(input("Selecione o indice do piloto que deseja apostar: "))
         print(f'Piloto selecionado: {nomePilotos[piloto]} {sobrenomePilotos[piloto]}')
@@ -209,7 +225,7 @@ if categoria == 1:
 elif categoria == 2:
     while True:
         print('Categoria selecionada: Apostar nos pilotos que estarão no podio\n')
-        AnimacaoCarregarPilotos()
+        AnimacaoCarregar()
         MostrarPilotos()
         podio = []
         for i in range(1, 4):  
@@ -245,7 +261,7 @@ elif categoria == 2:
 elif categoria == 3:
     while True:
         print('Categoria selecionada: Apostar no tempo de pit-stop mais rapido\n')
-        AnimacaoCarregarPilotos()
+        AnimacaoCarregar()
         MostrarPilotos()
         piloto = int(input("Selecione o indice do piloto que deseja apostar: "))
         print(f'Piloto selecionado: {nomePilotos[piloto]} {sobrenomePilotos[piloto]}')
@@ -274,7 +290,7 @@ elif categoria == 3:
 elif categoria == 4:
     while True:
         print('Categoria selecionada: Apostar no piloto de volta mais rapida\n')
-        AnimacaoCarregarPilotos()
+        AnimacaoCarregar()
         MostrarPilotos()
         piloto = int(input("Selecione o indice do piloto que deseja apostar: "))
         print(f'Piloto selecionado: {nomePilotos[piloto]} {sobrenomePilotos[piloto]}')
@@ -300,3 +316,35 @@ elif categoria == 4:
         else:
             print('Programa encerrado...')
             break
+elif categoria == 5:
+    while True:
+        print('Categoria selecionada: Apostar na equipe do piloto vencedor\n')
+        AnimacaoCarregar()
+        MostrarEquipes()
+        equipe = int(input("Selecione o indice da equipe em que deseja apostar: "))
+        print(f'Equipe selecionada: {equipesPilotos[equipe]}')
+        moedas = int(input(f"Quantas moedas deseja apostar no podio?"))
+        if VerificarSaldo(moedas):
+            FichaAposta(2, moedas)
+            time.sleep(0.5)
+            confirmacao = input('Prosseguir para a simulacao?: (S/n)')
+            if ConfirmacaoPositiva(confirmacao):
+                AnimacaoSimular()
+                equipeVencedora, saldo = ApostarEquipe(equipe, moedas)
+                print(f'Equipe vencedora: {equipeVencedora}')
+                print(f'Saldo de moedas apos aposta: {saldo:.2f}')
+                prosseguir = input('Deseja apostar de novo?: (S/n)')
+                if ConfirmacaoNegativa(prosseguir):
+                    print('OBRIGADO POR JOGAR!\n ATÉ A PROXIMA     :)')
+                    break
+            else:
+                time.sleep(2)
+                print('Aposta encerrada...')
+                break
+        else:
+            print('Programa encerrado...')
+            break
+else:
+    print('Escolha nao disponivel...')
+
+

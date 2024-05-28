@@ -1,8 +1,6 @@
 import random
 import time
 
-
-
 nomePilotos = ['Jake', 'Stoffel', 'Sergio',
                'Robin', 'Joel', 'Jake',
                'Maximilan', 'Sam', 'Taylor', 
@@ -18,10 +16,10 @@ sobrenomePilotos = ['Dennis', 'Vandoorne', 'Sette Camara',
                     'Gunter', 'Bird', 'Barnard',
                     'Evans', 'Di Grassi', 'Da Costa',
                     'Aron', 'Buemi', 'Nato', 
-                    'Daruvala', 'De Vries' 'King',
+                    'Daruvala', 'De Vries', 'King', 
                     'Rowland', 'Fenestraz', 'Vergne',
                     'Ticktum', 'Cassidy', 'Mortara',
-                    'Muller', 'Van Der Linde', 'Wehrlein']
+                    'Muller', 'Van Der Linde', 'Wehrlein']  
 
 numerosPilotos = [1, 2, 3, 4, 4, 5, 7, 8, 8, 9, 11, 13, 16,
                   16, 17, 18, 21, 21, 22, 23, 25, 33, 37, 48,
@@ -38,13 +36,13 @@ equipesPilotos = ['Andretti', 'Penske', 'ERT',
                   'ABT', 'ABT', 'Porsche']
 
 def MostrarPilotos():
-    for i in range(len(nomePilotos) - 1):
+    for i in range(len(nomePilotos)):  
         print( '+-------------------------------------+')
         print(f'|                 {i}                 |')
         print(f'|NOME: {nomePilotos[i]} {sobrenomePilotos[i]}\n|EQUIPE: {equipesPilotos[i]}')
 
 def MostrarEquipes():
-    for i in range(len(equipesPilotos) - 1):
+    for i in range(len(equipesPilotos)):  
         print( '+-------------------------------------+')
         print(f'|                 {i}                 |')
         print(f'|EQUIPE: {equipesPilotos[i]}'           )
@@ -140,16 +138,22 @@ def ApostarPosicaoFinal(posicao, moedas):
 
 
 def ApostarPodio(piloto1, piloto2, piloto3, moedas):
-    podio = random.sample(nomePilotos, 3)
+    # Cria um pódio randomicamente com 3 pilotos
+    indices_podio = random.sample(range(len(nomePilotos)), 3)
+    podio = [(nomePilotos[i], sobrenomePilotos[i]) for i in indices_podio]
+
+    for i, (nome, sobrenome) in enumerate(podio):
+        print(f"Posição {i+1}: {nome} {sobrenome}")
 
     acertos = 0
-    if piloto1 in podio and piloto1 != podio[0]:
+    if piloto1 in [nome for nome, _ in podio]:
         acertos += 1
-    if piloto2 in podio and piloto2 != podio[1]:
+    if piloto2 in [nome for nome, _ in podio]:
         acertos += 1
-    if piloto3 in podio and piloto3 != podio[2]:
+    if piloto3 in [nome for nome, _ in podio]:
         acertos += 1
 
+    saldo = moedas
     if acertos == 3:
         saldo += 200
     elif acertos == 2:
@@ -158,9 +162,12 @@ def ApostarPodio(piloto1, piloto2, piloto3, moedas):
         saldo += 30
     else:
         print('Você perdeu :( ')
-        moedas -= int(moedas * 0.60)
+        saldo -= int(moedas * 0.60)
 
-    return podio, acertos, moedas
+    return saldo
+
+
+
 def ApostarEquipe(equipe, moedas):
     equipeVencedora = random.sample(equipesPilotos, 1)
     if equipe in equipeVencedora:
@@ -241,11 +248,8 @@ elif categoria == 2:
             confirmacao = input('Prosseguir para a simulacao?: (S/n)')
             if ConfirmacaoPositiva(confirmacao):
                 AnimacaoSimular()
-                resultado, acertos, saldo = ApostarPodio(podio[0], podio[1], podio[2], moedas)
+                saldo = ApostarPodio(podio[0], podio[1], podio[2], moedas)
                 time.sleep(2)
-                print(f"Resultado do podio: {resultado}")
-                print(f"Número de acertos: {acertos}")
-                print(f"Saldo de moedas após a aposta: {saldo}")
                 prosseguir = input('Deseja apostar de novo?: (S/n)')
                 if ConfirmacaoNegativa(prosseguir):
                     print('OBRIGADO POR JOGAR!\n ATÉ A PROXIMA     :)')
